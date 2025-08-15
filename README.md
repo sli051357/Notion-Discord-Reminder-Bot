@@ -1,0 +1,1 @@
+[IN PROGRESS] This project integrates a Notion database and Discord to send weekly project reminders.
