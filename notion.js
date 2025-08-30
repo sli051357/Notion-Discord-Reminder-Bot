@@ -1,9 +1,3 @@
-// https://developers.notion.com/docs/create-a-notion-integration
-// https://github.com/makenotion/notion-sdk-js/blob/main/examples/intro-to-notion-api/intermediate/3-query-database.js
-// https://discord.com/developers/docs/quick-start/getting-started
-// https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages
-
-
 import { Client } from "@notionhq/client";
 import configData from "./config.json" with { type: "json" };
 
@@ -14,7 +8,7 @@ const notion = new Client({
     auth: apiKey
 })
 
-async function queryFinals(databaseId=pageId) {
+export async function queryFinals(databaseId=pageId) {
     const upcoming_due = await notion.databases.query({
         database_id: databaseId,
         filter: {
@@ -38,10 +32,10 @@ async function queryFinals(databaseId=pageId) {
         });
     }
 
-    console.log(assignments)
+    return assignments
 }
 
-async function queryIterations(databaseId=pageId) {
+export async function queryIterations(databaseId=pageId) {
     const upcoming_iteration = await notion.databases.query({
         database_id: databaseId,
         filter: {
@@ -65,13 +59,5 @@ async function queryIterations(databaseId=pageId) {
         });
     }
 
-    // console.log(assignments)
+    return assignments
 }
-
-async function main() {
-    // const databaseId = pageId 
-    queryFinals()
-    queryIterations()
-}
-
-main()
