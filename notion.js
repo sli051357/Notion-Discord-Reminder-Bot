@@ -3,29 +3,45 @@
 // https://discord.com/developers/docs/quick-start/getting-started
 // https://discord.com/developers/docs/interactions/receiving-and-responding#followup-messages
 
-import { Client } from "@notionhq/client"
-import { config } from "dotenv"
 
-config() 
+import { Client } from "@notionhq/client";
+import configData from "./config.json" with { type: "json" };
 
-const pageId = process.env.NOTION_PAGE_ID
-const apiKey = process.env.NOTION_KEY
+const pageId = configData.NOTION_PAGE_ID
+const apiKey = configData.NOTION_KEY
 
 const notion = new Client({
     auth: apiKey
 })
 
-async function queryDatabase(databaseId) {
+async function queryFinals(databaseId=pageId) {
     const upcoming_due = await notion.databases.query({
         database_id: databaseId,
         filter: {
             property: "Due Date",
             date: {
-                next_week: {}
+                next_month: {}
             }
         },
     });
 
+    const assignments = new Map();
+    for (let i = 0; i < upcoming_due.results.length; i++) {
+        let content = upcoming_due.results[i].properties
+        let assignmentName = content.Name.title[0].plain_text;
+        let date = content["Due Date"].date.start;
+        let assignedTo = content["Assigned To"].people[0].id;
+
+        assignments.set(assignmentName, {
+            date: date,
+            assignedTo: assignedTo,
+        });
+    }
+
+    console.log(assignments)
+}
+
+async function queryIterations(databaseId=pageId) {
     const upcoming_iteration = await notion.databases.query({
         database_id: databaseId,
         filter: {
@@ -36,26 +52,26 @@ async function queryDatabase(databaseId) {
         }
     });
 
-    console.log("Due Date");
-    for (let i = 0; i < upcoming_due.results.length; i++) {
-        let pageData = upcoming_due.results[i].properties.Name.title;
-        console.log(pageData[0].plain_text);
-
-        let timeData = upcoming_due.results[i].properties['Due Date'].date.start;
-        console.log(timeData)
-    }
-
-    console.log("First iteration")
+    const assignments = new Map();
     for (let i = 0; i < upcoming_iteration.results.length; i++) {
-        let pageData = upcoming_iteration.results[i].properties.Name.title;
-        console.log(pageData[0].plain_text)
+        let content = upcoming_iteration.results[i].properties
+        let assignmentName = content.Name.title[0].plain_text;
+        let date = content["First Iteration Date"].date.start;
+        let assignedTo = content["Assigned To"].people[0].id;
 
-        let data = upcoming_iteration.results[i].properties['First Iteration Date'].date.start;
-        console.log(data)
+        assignments.set(assignmentName, {
+            date: date,
+            assignedTo: assignedTo,
+        });
     }
+
+    // console.log(assignments)
 }
 
 async function main() {
-    const databaseId = pageId 
-    queryDatabase(databaseId)
+    // const databaseId = pageId 
+    queryFinals()
+    queryIterations()
 }
+
+main()
