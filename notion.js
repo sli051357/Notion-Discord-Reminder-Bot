@@ -14,7 +14,7 @@ export async function queryFinals(databaseId=pageId) {
         filter: {
             property: "Due Date",
             date: {
-                next_month: {}
+                next_week: {}
             }
         },
     });

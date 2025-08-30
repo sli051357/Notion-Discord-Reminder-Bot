@@ -17,6 +17,9 @@ const formatAssignments = (assignments) => {
         let date = value.date.substring(5).replace("-", "/")
         message += `**${date}** — ${key} by <@${user_map[value.assignedTo]}>\n`;
     }
+    if (message === ``) {
+        message = `*None upcoming*\n`
+    }
     return message
 };
 
@@ -39,10 +42,10 @@ client.once(Events.ClientReady, async readyClient => {
         .setDescription(
             `**__Final Deadlines__**
             ${final_string}
-            
             **__First Iteration Deadlines__**
             ${iteration_string}`
         )
+        .setColor('#ff943d')
 
     channel.send({ embeds: [embed] });
 });
