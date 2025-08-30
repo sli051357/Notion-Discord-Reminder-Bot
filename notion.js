@@ -17,6 +17,16 @@ export async function queryFinals(databaseId=pageId) {
                 next_week: {}
             }
         },
+        sorts: [
+            {
+                property: "Due Date",
+                direction: "ascending",
+            },
+            {
+                property: "Assigned To",
+                direction: "ascending",
+            }
+        ],
     });
 
     const assignments = new Map();
@@ -43,7 +53,17 @@ export async function queryIterations(databaseId=pageId) {
             date: {
                 next_week: {}
             }
-        }
+        },
+        sorts: [
+            {
+                property: "First Iteration Date",
+                direction: "ascending",
+            },
+            {
+                property: "Assigned To",
+                direction: "ascending",
+            }
+        ],
     });
 
     const assignments = new Map();

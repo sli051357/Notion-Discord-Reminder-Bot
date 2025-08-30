@@ -35,7 +35,7 @@ client.once(Events.ClientReady, async readyClient => {
 
     const d = new Date();
     const date = d.toLocaleString('en-US', { month: '2-digit', day: '2-digit' });
-    const next_date = new Date(d.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleString('en-US', { month: '2-digit', day: '2-digit' })
+    const next_date = new Date(d.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleString('en-US', { month: '2-digit', day: '2-digit' })
 
     const embed = new EmbedBuilder()
         .setTitle(`Upcoming Deadlines: ${date} - ${next_date}`)
