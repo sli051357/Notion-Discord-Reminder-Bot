@@ -1,10 +1,7 @@
 import { Client } from "@notionhq/client";
-// import configData from "./config.json" with { type: "json" };
 import { config } from 'dotenv';
 config();
 
-// const pageId = configData.NOTION_PAGE_ID
-// const apiKey = configData.NOTION_KEY
 const pageId = process.env.NOTION_PAGE_ID;
 const apiKey = process.env.NOTION_KEY;
 

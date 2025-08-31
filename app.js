@@ -1,11 +1,8 @@
 import { Client, Events, GatewayIntentBits, EmbedBuilder } from "discord.js";
-// import configData from "./config.json" with { type: "json" };
 import { queryFinals, queryIterations } from './notion.js';
 import { config } from 'dotenv';
 config();
-// const bot_token = configData.DISCORD_BOT_TOKEN;
-// const channel_id = configData.DISCORD_CHANNEL_ID;
-// const user_map = configData.notionToDiscordMap;
+
 const bot_token = process.env.DISCORD_BOT_TOKEN;
 const channel_id = process.env.DISCORD_CHANNEL_ID;
 const user_map = JSON.parse(process.env.NOTION_TO_DISCORD_MAP)
@@ -25,7 +22,6 @@ const formatAssignments = (assignments) => {
 };
 
 client.once(Events.ClientReady, async readyClient => {
-    // console.log(`Ready! Logged in as ${readyClient.user.tag}`);
     const channel = client.channels.cache.get(channel_id);
     
     const final_assignments = await queryFinals();
@@ -51,7 +47,9 @@ client.once(Events.ClientReady, async readyClient => {
     const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n${iteration_string}`;
 
     // channel.send({ embeds: [embed] });
-    channel.send({ content: message_text })
+    await channel.send({ content: message_text });
+    await client.destroy();
+    process.exit(0);
 });
 
 client.login(bot_token)
