@@ -1,13 +1,14 @@
-// https://discordjs.guide/preparations/#installing-node-js
-
-// const { Client, Events, GatewayIntentBits } = require('discord.js');
 import { Client, Events, GatewayIntentBits, EmbedBuilder } from "discord.js";
-import configData from "./config.json" with { type: "json" };
+// import configData from "./config.json" with { type: "json" };
 import { queryFinals, queryIterations } from './notion.js';
-
-const bot_token = configData.DISCORD_BOT_TOKEN;
-const channel_id = configData.DISCORD_CHANNEL_ID;
-const user_map = configData.notionToDiscordMap;
+import { config } from 'dotenv';
+config();
+// const bot_token = configData.DISCORD_BOT_TOKEN;
+// const channel_id = configData.DISCORD_CHANNEL_ID;
+// const user_map = configData.notionToDiscordMap;
+const bot_token = process.env.DISCORD_BOT_TOKEN;
+const channel_id = process.env.DISCORD_CHANNEL_ID;
+const user_map = JSON.parse(process.env.NOTION_TO_DISCORD_MAP)
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
