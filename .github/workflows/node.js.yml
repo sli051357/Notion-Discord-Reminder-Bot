@@ -5,7 +5,7 @@ name: Reminder message
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '0 8 * * 6' # runs every Saturday at 12AM PST
   workflow_dispatch:
 
 jobs:
