@@ -37,17 +37,20 @@ client.once(Events.ClientReady, async readyClient => {
     const date = d.toLocaleString('en-US', { month: '2-digit', day: '2-digit' });
     const next_date = new Date(d.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleString('en-US', { month: '2-digit', day: '2-digit' })
 
-    const embed = new EmbedBuilder()
-        .setTitle(`Upcoming Deadlines: ${date} - ${next_date}`)
-        .setDescription(
-            `**__Final Deadlines__**
-            ${final_string}
-            **__First Iteration Deadlines__**
-            ${iteration_string}`
-        )
-        .setColor('#ff943d')
+    // const embed = new EmbedBuilder()
+    //     .setTitle(`Upcoming Deadlines: ${date} - ${next_date}`)
+    //     .setDescription(
+    //         `**__Final Deadlines__**
+    //         ${final_string}
+    //         **__First Iteration Deadlines__**
+    //         ${iteration_string}`
+    //     )
+    //     .setColor('#ff943d');
 
-    channel.send({ embeds: [embed] });
+    const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n${iteration_string}`;
+
+    // channel.send({ embeds: [embed] });
+    channel.send({ content: message_text })
 });
 
 client.login(bot_token)
