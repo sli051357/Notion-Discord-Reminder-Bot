@@ -29,6 +29,7 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm ci
+    - run: echo "length of my map: ${{ secrets.NOTION_TO_DISCORD_MAP }}"
     - name: Run app
       run: node app.js
       env:
