@@ -13,10 +13,20 @@ export async function queryFinals(databaseId=pageId) {
     const upcoming_due = await notion.databases.query({
         database_id: databaseId,
         filter: {
-            property: "Due Date",
-            date: {
-                next_week: {}
-            }
+            and: [
+                {
+                    property: "Due Date",
+                    date: {
+                        next_week: {}
+                    }
+                },
+                {
+                    property: "Status",
+                    select: {
+                        does_not_equal: "Archive",
+                    }
+                }
+            ]
         },
         sorts: [
             {
