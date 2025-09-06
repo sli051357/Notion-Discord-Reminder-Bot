@@ -23,7 +23,13 @@ export async function queryFinals(databaseId=pageId) {
                 {
                     property: "Status",
                     select: {
-                        does_not_equal: "Archive",
+                        does_not_equal: "Archive"
+                    }
+                },
+                {
+                    property: "Status",
+                    select: {
+                        does_not_equal: "Done",
                     }
                 }
             ]
@@ -60,10 +66,26 @@ export async function queryIterations(databaseId=pageId) {
     const upcoming_iteration = await notion.databases.query({
         database_id: databaseId,
         filter: {
-            property: "First Iteration Date",
-            date: {
-                next_week: {}
-            }
+            and: [
+                {
+                    property: "First Iteration Date",
+                    date: {
+                        next_week: {}
+                    }
+                },
+                {
+                    property: "Status",
+                    select: {
+                        does_not_equal: "Archive",
+                    }
+                },
+                {
+                    property: "Status",
+                    select: {
+                        does_not_equal: "First Iteration",
+                    }
+                }
+            ]
         },
         sorts: [
             {
