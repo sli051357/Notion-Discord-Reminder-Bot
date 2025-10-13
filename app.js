@@ -27,6 +27,12 @@ client.once(Events.ClientReady, async readyClient => {
     const final_assignments = await queryFinals();
     const iteration_assignments = await queryIterations();
 
+    // If there are no assignments, don't send a message
+    if (final_assignments.size == 0 && iteration_assignments.size == 0) {
+        await client.destroy();
+        process.exit(0);
+    }
+
     let final_string = formatAssignments(final_assignments);
     let iteration_string = formatAssignments(iteration_assignments);
 
