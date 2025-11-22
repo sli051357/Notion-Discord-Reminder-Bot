@@ -6,6 +6,8 @@ Originally written for the Art Team at the Keyboard Club @ UCSD. Each assignment
 
 This project also uses Github Actions to automate sending messages every week on Saturdays at 12:00AM PST.
 
+Other team usage (including Team Leads for Keyboard Club) is stored in their respective branches with their own message configuration, timing, and pipelines.
+
 ## Setup and Installation
 Clone this repository and run `npm install` to install all of the dependencies for the project.
 
