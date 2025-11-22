@@ -5,7 +5,7 @@ config();
 
 const bot_token = process.env.DISCORD_BOT_TOKEN;
 const channel_id = process.env.DISCORD_CHANNEL_ID;
-const user_map = JSON.parse(process.env.NOTION_TO_DISCORD_MAP)
+const user_map = JSON.parse(process.env.NOTION_TO_DISCORD_MAP);
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
