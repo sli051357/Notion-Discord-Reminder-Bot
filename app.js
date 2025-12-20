@@ -12,8 +12,12 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const formatAssignments = (assignments) => {
     let message = ``;
     for (const [key, value] of assignments) {
-        let date = value.date.substring(5).replace("-", "/")
-        message += `**${date}** — ${key} by <@${user_map[value.assignedTo]}>\n`;
+        let date = value.date.substring(5).replace("-", "/");
+        if (value.assignedTo in user_map) {
+            message += `**${date}** — ${key} by <@${user_map[value.assignedTo]}>\n`;
+        } else if (value.assignedTo) {
+            message += `**${date}** — ${key} by Unassigned\n`;
+        }
     }
     if (message === ``) {
         message = `*None upcoming*\n`

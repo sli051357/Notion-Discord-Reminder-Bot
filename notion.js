@@ -51,7 +51,11 @@ export async function queryFinals(databaseId=pageId) {
         let content = upcoming_due.results[i].properties;
         let assignmentName = content.Name.title[0].plain_text;
         let date = content["Due Date"].date.start;
-        let assignedTo = content["Assigned To"].people[0].id;
+        let assignedTo = '';
+
+        if (content["Assigned To"].people.length != 0) {
+            assignedTo = content["Assigned To"].people[0].id;
+        }
 
         assignments.set(assignmentName, {
             date: date,
@@ -104,7 +108,11 @@ export async function queryIterations(databaseId=pageId) {
         let content = upcoming_iteration.results[i].properties;
         let assignmentName = content.Name.title[0].plain_text;
         let date = content["First Iteration Date"].date.start;
-        let assignedTo = content["Assigned To"].people[0].id;
+        let assignedTo = '';
+
+        if (content["Assigned To"].people.length != 0) {
+            assignedTo = content["Assigned To"].people[0].id;
+        }
 
         assignments.set(assignmentName, {
             date: date,
