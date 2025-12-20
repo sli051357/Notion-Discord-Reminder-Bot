@@ -16,7 +16,9 @@ const formatAssignments = (assignments) => {
         if (value.assignedTo in user_map) {
             message += `**${date}** — ${key} by <@${user_map[value.assignedTo]}>\n`;
         } else if (value.assignedTo) {
-            message += `**${date}** — ${key} by Unassigned\n`;
+            message += `**${date}** — ${key} by *Unknown*\n`;
+        } else {
+            message += `**${date}** — ${key} by *Unassigned*\n`;
         }
     }
     if (message === ``) {
