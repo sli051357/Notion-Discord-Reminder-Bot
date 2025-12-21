@@ -2,11 +2,9 @@
 
 This project pulls data from a Notion database to send weekly reminders summarizing upcoming deadlines in Discord.
 
-Originally written for the Art Team at the Keyboard Club @ UCSD. Each assignment has two dates associated with it, a "final due date" and a "first iteration due date," which is one week before the final due date. These values are tracked in Notion, and this project pulls all of the Notion data, filters for due dates and first iteration dates within the next week, and then sends a summarized message in a Discord channel.
+This specific branch runs reminders for the Team Leads at the Keyboard Club @ UCSD. It differs by sending reminders both two weeks and one week before something is due. It then groups these reminders based on the associated project (which is linked using a relation to a separate database in Notion), then sends a summarized message in a Discord channel.
 
 This project also uses Github Actions to automate sending messages every week on Saturdays at 12:00AM PST.
-
-Other team usage (including Team Leads for Keyboard Club) is stored in their respective branches with their own message configuration, timing, and pipelines.
 
 ## Setup and Installation
 Clone this repository and run `npm install` to install all of the dependencies for the project.
@@ -25,7 +23,8 @@ Details for Discord credentials can be found on [Discord's developer site](https
 
 Details for Notion credentials can be found on [Notion's developer site](https://developers.notion.com/docs/create-a-notion-integration#environment-variables).
 - `NOTION_KEY`: The API secret key
-- `NOTION_PAGE_ID`: The page ID of the Notion database
+- `NOTION_PAGE_ID`: The page ID of the Notion database for that stores a list of deadlines
+- `NOTION_PAGE_ID_PROJECTS`: The page ID of the Notion database that stores a list of projects
 
 This project uses a JSON map to map Notion IDs to Discord IDs in order to ping the correct person in Discord based on the assignee in Notion. This is formatted as
 ```
@@ -46,12 +45,31 @@ Run `node app.js`. This will send a formatted message in the specified Discord c
 
 The current message format is as follows:
 ```
-Upcoming Deadlines: [date range]
+Upcoming Deadlines
 
-Final Deadlines
+This Week (Date Range)
+Project #1
 [Date] - [Assignment Name] by [User]
 
-First Iteration Deadlines
+Project #2
+[Date] - [Assignment Name] by [User]
+
+Next Week (Date Range)
+Project #1
 [Date] - [Assignment Name] by [User]
 ```
-![A screenshot of a message sent by this script.](images/image.png)
+![A screenshot of a message sent by this script](images/image2.png)
+
+Note that unlike the art team assignments in the main branch, team leads assignments can have multiple people assigned to them; this is also handled by the updated code in this branch.
+
+## Automation
+
+This script uses multiple environments to store different environment variables that are specific to each team. For example, the Team Leads reminders use a different Notion database and sends to a different Discord channel.
+
+To set up automation, do the following:
+
+1. [Create a Github Environment](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments#creating-an-environment) for each database you plan to pull from, channe to send to, etc. (any other unique identifiers used to separate the workflow runs).
+
+2. Place all shared variables inside repository secrets (usually `DISCORD_APP_ID`, `DISCORD_BOT_TOKEN`, `DISCORD_PUBLIC_KEY`, `NOTION_KEY`) and all unique variables (usually `DISCORD_CHANNEL_ID`, `NOTION_PAGE_ID`, `NOTION_PAGE_ID_PROJECTS`, `NOTION_TO_DISCORD_MAP`) inside environment secrets.
+
+3. Update the `node.js.yml` file to use your specified environment.
