@@ -1,5 +1,5 @@
 import { Client, Events, GatewayIntentBits, EmbedBuilder } from "discord.js";
-import { queryFinals, queryIterations } from './notion.js';
+import { queryNextWeek, querySecondWeek } from './notion.js';
 import { config } from 'dotenv';
 config();
 
@@ -30,8 +30,8 @@ const formatAssignments = (assignments) => {
 client.once(Events.ClientReady, async readyClient => {
     const channel = client.channels.cache.get(channel_id);
     
-    const final_assignments = await queryFinals();
-    const iteration_assignments = await queryIterations();
+    const final_assignments = await queryNextWeek();
+    // const iteration_assignments = await queryIterations();
 
     // If there are no assignments, don't send a message
     if (final_assignments.size == 0 && iteration_assignments.size == 0) {
@@ -40,7 +40,7 @@ client.once(Events.ClientReady, async readyClient => {
     }
 
     let final_string = formatAssignments(final_assignments);
-    let iteration_string = formatAssignments(iteration_assignments);
+    // let iteration_string = formatAssignments(iteration_assignments);
 
     const d = new Date();
     const date = d.toLocaleString('en-US', { month: '2-digit', day: '2-digit' });
@@ -56,7 +56,8 @@ client.once(Events.ClientReady, async readyClient => {
     //     )
     //     .setColor('#ff943d');
 
-    const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n${iteration_string}`;
+    // const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n${iteration_string}`;
+    const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n`;
 
     // channel.send({ embeds: [embed] });
     await channel.send({ content: message_text });
