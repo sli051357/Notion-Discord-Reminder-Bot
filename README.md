@@ -55,3 +55,15 @@ First Iteration Deadlines
 [Date] - [Assignment Name] by [User]
 ```
 ![A screenshot of a message sent by this script.](images/image.png)
+
+## Automation
+
+This script uses multiple environments to store different environment variables that are specific to each team. For example, the Team Leads reminders use a different Notion database and sends to a different Discord channel.
+
+To set up automation, do the following:
+
+1. [Create a Github Environment](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments#creating-an-environment) for each database you plan to pull from, channe to send to, etc. (any other unique identifiers used to separate the workflow runs).
+
+2. Place all shared variables inside repository secrets (usually `DISCORD_APP_ID`, `DISCORD_BOT_TOKEN`, `DISCORD_PUBLIC_KEY`, `NOTION_KEY`) and all unique variables (usually `DISCORD_CHANNEL_ID`, `NOTION_PAGE_ID`, `NOTION_TO_DISCORD_MAP`) inside environment secrets.
+
+3. Update the `node.js.yml` file to use your specified environment.
