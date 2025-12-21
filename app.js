@@ -12,14 +12,26 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const formatAssignments = (assignments) => {
     let message = ``;
     for (const [key, value] of assignments) {
-        let date = value.date.substring(5).replace("-", "/");
-        if (value.assignedTo in user_map) {
-            message += `**${date}** — ${key} by <@${user_map[value.assignedTo]}>\n`;
-        } else if (value.assignedTo) {
-            message += `**${date}** — ${key} by *Unknown*\n`;
-        } else {
-            message += `**${date}** — ${key} by *Unassigned*\n`;
+        message += `**${key}**\n`;
+
+        for (const v of value) {
+            let date = v.date.substring(5).replace("-", "/");
+            message += `**${date}** — ${v.name} by `;
+
+            if (v.assignedTo.length == 0) {
+                message += `*Unassigned*\n`;
+            } else {
+                for (const person of v.assignedTo) {
+                    if (person in user_map) {
+                        message += `<@${user_map[person]}> `;
+                    } else {
+                        message += `*Unknown* `;
+                    }
+                }
+                message += `\n`;
+            }
         }
+        message += `\n`;
     }
     if (message === ``) {
         message = `*None upcoming*\n`
@@ -31,20 +43,21 @@ client.once(Events.ClientReady, async readyClient => {
     const channel = client.channels.cache.get(channel_id);
     
     const final_assignments = await queryNextWeek();
-    // const iteration_assignments = await queryIterations();
+    const upcoming_assignments = await querySecondWeek();
 
     // If there are no assignments, don't send a message
-    if (final_assignments.size == 0 && iteration_assignments.size == 0) {
+    if (final_assignments.size == 0 && upcoming_assignments.size == 0) {
         await client.destroy();
         process.exit(0);
     }
 
     let final_string = formatAssignments(final_assignments);
-    // let iteration_string = formatAssignments(iteration_assignments);
+    let upcoming_string = formatAssignments(upcoming_assignments);
 
     const d = new Date();
     const date = d.toLocaleString('en-US', { month: '2-digit', day: '2-digit' });
-    const next_date = new Date(d.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleString('en-US', { month: '2-digit', day: '2-digit' })
+    const next_date = new Date(d.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleString('en-US', { month: '2-digit', day: '2-digit' });
+    const next_next_date = new Date(d.getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleString('en-US', { month: '2-digit', day: '2-digit' });
 
     // const embed = new EmbedBuilder()
     //     .setTitle(`Upcoming Deadlines: ${date} - ${next_date}`)
@@ -56,8 +69,8 @@ client.once(Events.ClientReady, async readyClient => {
     //     )
     //     .setColor('#ff943d');
 
-    // const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n${iteration_string}`;
-    const message_text = `## Upcoming Deadlines: ${date} - ${next_date}\n**__Final Deadlines__**\n${final_string}\n**__First Iteration Deadlines__**\n`;
+    let message_text = `## Upcoming Deadlines\n ### **__This Week__** (${date} - ${next_date})\n${final_string}`;
+    message_text += `### **__Next Week__** (${next_date} - ${next_next_date})\n${upcoming_string}`;
 
     // channel.send({ embeds: [embed] });
     await channel.send({ content: message_text });

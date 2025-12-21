@@ -2,7 +2,7 @@ import { Client } from "@notionhq/client";
 import { config } from 'dotenv';
 config();
 
-const pageId = process.env.NOTION_PAGE_ID_BASE;
+const pageId = process.env.NOTION_PAGE_ID;
 const pageIdProjects = process.env.NOTION_PAGE_ID_PROJECTS;
 const apiKey = process.env.NOTION_KEY;
 
@@ -53,7 +53,7 @@ export async function queryNextWeek(databaseId=pageId) {
                 {
                     property: "Due",
                     date: {
-                        next_month: {}
+                        next_week: {}
                     }
                 },
                 {
@@ -100,67 +100,91 @@ export async function queryNextWeek(databaseId=pageId) {
             }
         }
         
-        assignments.set(assignmentName, {
+        if (!assignments.has(projectName)) {
+            assignments.set(projectName, []);
+        }
+
+        assignments.get(projectName).push({
+            name: assignmentName,
             date: date,
             assignedTo: assignedTo,
-            projectName: projectName
         });
     }
-
-    console.log(assignments);
 
     return assignments;
 }
 
 export async function querySecondWeek(databaseId=pageId) {
-    const upcoming_iteration = await notion.databases.query({
+    const d = new Date();
+    const date_start = new Date(new Date(d.getTime() + 7 * 24 * 60 * 60 * 1000).setHours(0, 0, 0, 0)).toISOString();
+    const date_end = new Date(new Date(d.getTime() + 14 * 24 * 60 * 60 * 1000).setHours(0, 0, 0, 0)).toISOString();
+
+    const upcoming_due = await notion.databases.query({
         database_id: databaseId,
         filter: {
             and: [
                 {
-                    property: "First Iteration Date",
+                    property: "Due",
                     date: {
-                        next_week: {}
+                        after: date_start
+                    }
+                },
+                {
+                    property: "Due",
+                    date: {
+                        before: date_end
                     }
                 },
                 {
                     property: "Status",
-                    select: {
-                        does_not_equal: "Archive",
+                    status: {
+                        does_not_equal: "Archive"
                     }
                 },
                 {
                     property: "Status",
-                    select: {
-                        does_not_equal: "First Iteration",
+                    status: {
+                        does_not_equal: "Done",
                     }
                 }
             ]
         },
         sorts: [
             {
-                property: "First Iteration Date",
+                property: "Project",
                 direction: "ascending",
             },
             {
-                property: "Assigned To",
+                property: "Due",
+                direction: "ascending",
+            },
+            {
+                property: "Assign",
                 direction: "ascending",
             }
         ],
     });
 
     const assignments = new Map();
-    for (let i = 0; i < upcoming_iteration.results.length; i++) {
-        let content = upcoming_iteration.results[i].properties;
-        let assignmentName = content.Name.title[0].plain_text;
-        let date = content["First Iteration Date"].date.start;
-        let assignedTo = '';
+    for (let i = 0; i < upcoming_due.results.length; i++) {
+        let content = upcoming_due.results[i].properties;
+        let assignmentName = content["Task name"].title[0].plain_text;
+        let date = content["Due"].date.start;
+        let projectName = projects.get(content["Project"].relation[0].id);
 
-        if (content["Assigned To"].people.length != 0) {
-            assignedTo = content["Assigned To"].people[0].id;
+        let assignedTo = [];
+        if (content["Assign"].people.length != 0) {
+            for (let j = 0; j < content["Assign"].people.length; j++) {
+                assignedTo.push(content["Assign"].people[j].id);
+            }
+        }
+        
+        if (!assignments.has(projectName)) {
+            assignments.set(projectName, []);
         }
 
-        assignments.set(assignmentName, {
+        assignments.get(projectName).push({
+            name: assignmentName,
             date: date,
             assignedTo: assignedTo,
         });
