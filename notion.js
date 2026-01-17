@@ -170,7 +170,13 @@ export async function querySecondWeek(databaseId=pageId) {
         let content = upcoming_due.results[i].properties;
         let assignmentName = content["Task name"].title[0].plain_text;
         let date = content["Due"].date.start;
-        let projectName = projects.get(content["Project"].relation[0].id);
+
+        let projectName = "";
+        if (content["Project"].relation.length < 1) {
+            projectName = "No Project Associated";
+        } else {
+            projectName = projects.get(content["Project"].relation[0].id);
+        }
 
         let assignedTo = [];
         if (content["Assign"].people.length != 0) {
