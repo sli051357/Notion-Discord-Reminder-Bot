@@ -59,7 +59,7 @@ export async function queryNextWeek(databaseId=pageId) {
                 {
                     property: "Status",
                     status: {
-                        does_not_equal: "Archive"
+                        does_not_equal: "Archived"
                     }
                 },
                 {
@@ -138,7 +138,7 @@ export async function querySecondWeek(databaseId=pageId) {
                 {
                     property: "Status",
                     status: {
-                        does_not_equal: "Archive"
+                        does_not_equal: "Archived"
                     }
                 },
                 {
