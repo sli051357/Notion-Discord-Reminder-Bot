@@ -86,7 +86,7 @@ export async function queryIterations(databaseId=pageId) {
                 {
                     property: "Status",
                     select: {
-                        does_not_equal: "First Iteration",
+                        does_not_equal: "Iteration Complete",
                     }
                 }
             ]
