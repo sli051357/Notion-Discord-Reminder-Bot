@@ -43,7 +43,7 @@ client.on('messageCreate', async (message) => {
         else if (key === "key3") { keyData.key3 = user_id }
         else if (key === "key4") { keyData.key4 = user_id }
         else {
-            message.reply("key not found :wah:")
+            message.reply("key not found <:wah:1559644644365828166>")
             keyFound = false;
         }
 
