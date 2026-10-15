@@ -31,29 +31,24 @@ client.on('messageCreate', async (message) => {
     if (command === 'keyupdate') {
         const key = args[0];   // "key1"
         const user_id = args[1];  // "user_id"
-        let keyFound = true;
 
         if (user_id === undefined) {
-            message.reply("u didnt tell me who has that key");
+            message.reply("u didnt tell me who has that key <:kwibumm:1441314195995103323>");
             return;
         }
 
-        if (key === "key1") { keyData.key1 = user_id }
-        else if (key === "key2") { keyData.key2 = user_id }
-        else if (key === "key3") { keyData.key3 = user_id }
-        else if (key === "key4") { keyData.key4 = user_id }
+        if (key === "donny") { keyData.donny = user_id }
+        else if (key === "sanrio") { keyData.sanrio = user_id }
+        else if (key === "watermelon") { keyData.watermelon = user_id }
+        else if (key === "egg") { keyData.egg = user_id }
         else {
             message.reply("key not found <:wah:1559644644365828166>")
-            keyFound = false;
+            return;
         }
-
-        if (keyFound) {
-            message.reply("updated " + key);
-            fs.writeFileSync("./keyinfo.json", JSON.stringify(keyData, null, 2), 'utf8');
-        }
-
+        
+        message.reply("updated " + key);
+        fs.writeFileSync("./keyinfo.json", JSON.stringify(keyData, null, 2), 'utf8');
     }
-
 });
 
 client.login(bot_token)
